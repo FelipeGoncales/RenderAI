@@ -59,8 +59,14 @@
                     <p>Selecionar imagem</p>
                 </label>
 
-                <!-- Btn submit -->
-                <button type="submit" class="generate-btn">Gerar imagem</button>
+                <div class="div-prompt">
+                    <textarea name="prompt" id="prompt" placeholder="Descreva o ambiente que deseja criar"></textarea>
+                  
+                    <!-- Btn submit -->
+                    <button type="submit" class="generate-btn">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
 
             </form>
         </section>
@@ -101,6 +107,8 @@
             </div>
 
         </section>
+
+        <div class="divAlertMessage"></div>
 
         <!-- Loading screen vem aqui (Carregado dinamicamente com js) -->
     </main>

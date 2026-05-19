@@ -11,6 +11,7 @@
 :root {
     --primary-color: #FFFFFF;
     --bg-color: #131313;
+    --secondary-color: #272727;
 }
 
 body {
@@ -62,12 +63,46 @@ form {
     gap: 20px;
 }
 
+.div-prompt {
+    position: relative;
+    width: 380px;
+    background-color: var(--secondary-color);
+    padding: 18px;
+    border-radius: 30px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+    padding-bottom: 50px;
+    
+    & textarea {
+        width: 100%;
+        border: none;
+        background-color: var(--secondary-color);
+        color: var(--primary-color);
+        outline: none;
+        font-size: 0.88rem;
+        resize: none;
+        height: 50px;
+        transition: 0.2s;
+
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+    }
+}
+
 .generate-btn {
+    position: absolute;
+    bottom: 18px;
+    right: 18px;
     background-color: var(--primary-color);
     padding: 15px;
-    width: 280px;
-    border-radius: 30px;
-    border: 1px solid var(--primary-color);
+
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     color: var(--bg-color);
     font-weight: 600;
@@ -77,17 +112,17 @@ form {
     transition: 0.3s;
 
     &:hover {
-        scale: 1.08;
+        background-color: rgba(255, 255, 255, 0.5);
     }
 
     &:disabled {
         background-color: rgba(255, 255, 255, 0.5);
         border: none;
         cursor: not-allowed;
+    }
 
-        &:hover {
-            scale: 1;
-        }
+    & i {
+        font-size: 0.85rem;
     }
 }
 
@@ -97,7 +132,7 @@ form {
 
 .label-upload-image {
     padding: 70px;
-    width: 280px;
+    width: 380px;
     height: 280px;
     aspect-ratio: 1/1;
     max-width: 95vw;
@@ -269,13 +304,71 @@ main {
 
 .preview-upload-image,
 .img-generated {
-    width: 280px;
-    background-color: #222222;
+    width: 380px;
     height: 280px;
+    background-color: #222222;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     border-radius: 30px;
+}
+
+.divAlertMessage {
+    position: fixed;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    flex-direction: column;
+    gap: 10px;
+
+    & .message {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        color: var(--primary-color);
+        padding: 15px;
+        border-radius: 10px;
+        font-weight: 500;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 1);
+        animation: showAlertMessage 3s forwards;
+
+        & i {
+            font-size: 1.1rem;
+        }
+
+        & p {
+            font-size: 0.9rem;
+        }
+    
+        &.error {
+            background-color: #ff0040;
+        }
+
+        &.success {
+            background-color: #00c76e;
+        }
+    }
+}
+
+/* Animação para exibir mensagem de alerta */
+@keyframes showAlertMessage {
+    0% {
+        opacity: 0;
+    }
+
+    25%, 85% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }
 
 .loading {
@@ -291,9 +384,31 @@ main {
     flex-direction: column;
     background-color: var(--bg-color);
     gap: 75px;
+    opacity: 0;
+    transition: 1s;
 
     & p {
         font-size: 1.2rem;
+    }
+}
+
+@keyframes showLoading {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes hideLoading {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
     }
 }
 
@@ -307,9 +422,8 @@ main {
         height: 90vw !important;
     }
 
-    .generate-btn {
+    .div-prompt {
         width: 90vw;
-        padding: 18px;
     }
 
     .title {

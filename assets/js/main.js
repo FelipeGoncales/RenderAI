@@ -126,43 +126,30 @@ typewriter();
 let $form = $('#form-gen-image');
 
 // Prompt para a geração da imagem
-let prompt = `
-    Transform this interior design sketch into a highly realistic modern bedroom render while preserving the exact room layout, furniture positioning, proportions, wardrobe placement, desk position, bed orientation, TV location, and window structure from the original image.
-    The room should look like a real professional architectural visualization for a custom furniture project.
-    Style:
-    - Modern minimalist bedroom
-    - Warm and cozy atmosphere
-    - High-end planned furniture
-    - Neutral color palette
-    - Soft ambient lighting
-    Materials:
-    - Dark wood headboard panel
-    - Matte beige sliding wardrobe
-    - Dark gray desktop
-    - Light wood flooring
-    - White walls with subtle texture
-    Lighting:
-    - Warm LED ceiling lights
-    - Natural light entering through the window
-    - Soft shadows
-    - Realistic reflections and global illumination
-    Details:
-    - Realistic bed fabric textures
-    - Modern decorative elements
-    - Slight depth of field
-    - Ultra realistic architectural render
-    - Photorealistic materials
-    - Interior design visualization
-    - Preserve the exact perspective from the original sketch
-    Quality:
-    - Ultra realistic
-    - 4K interior render
-    - Architectural visualization
-    - Professional render quality
-`;
+let prompt = $('#prompt').val();
 
 // Variável global para armazenar a URL da imagem gerada
 var generatedImageURL = null;
+
+// Função para mostrar a tela de carregamento
+function showLoadingScreen() {
+    $('.loading')
+        .css({
+            'display': 'flex',
+            'animation': 'showLoading 0.3s forwards'
+        });
+}
+
+// Função para esconder a tela de carregamento
+function hideLoadingScreen() {
+    $('.loading')
+        .css('animation', 'hideLoading 0.3s forwards');
+
+    // Após a animação de esconder, esconde a tela de carregamento
+    $('.loading').on('animationend', function () {
+        $(this).hide();
+    })
+}
 
 // Adicionar um evento de submit ao formulário
 $form.submit(async (e) => {
@@ -172,110 +159,166 @@ $form.submit(async (e) => {
     // Desabilitar o botão de gerar imagem para evitar múltiplos envios
     $('.generate-btn').prop('disabled', true);
 
-    const $loadingScreen = $('.loading')
+    try {
 
-    // Obter a imagem selecionada no input de arquivo
-    const image = $inputFile[0].files[0];
 
-    if (!image) {
-        alert('Por favor, selecione uma imagem.');
-        return;
-    }
+        // Obter a imagem selecionada no input de arquivo
+        const image = $inputFile[0].files[0];
 
-    // Construir o FormData para enviar a imagem e o prompt
-    const formData = new FormData();
+        if (!image) {
+            showAlert('Por favor, selecione uma imagem.', 'error');
+            // Habilitar o botão de gerar imagem novamente
+            return $('.generate-btn').prop('disabled', false);;
+        }
 
-    // Adicionar a imagem e o prompt ao FormData    
-    formData.append('image', image);
-    formData.append('prompt', prompt);
+        // Construir o FormData para enviar a imagem e o prompt
+        const formData = new FormData();
 
-    // Mostra a tela de carregamento
-    $loadingScreen.css('display', 'flex');
+        // Adicionar a imagem e o prompt ao FormData    
+        formData.append('image', image);
+        formData.append('prompt', prompt);
 
-    // Aguarda a requisição
-    const ajaxRequest = await $.ajax({
-        url: `${urlAPI}/gen_image`,
-        method: 'POST',
-        data: formData,
+        // Mostra a tela de carregamento
+        showLoadingScreen();
 
-        processData: false,
-        contentType: false,
+        // Aguarda a requisição
+        const ajaxRequest = await $.ajax({
+            url: `${urlAPI}/gen_image`,
+            method: 'POST',
+            data: formData,
 
-        xhrFields: {
-            responseType: 'blob'
-        },
+            processData: false,
+            contentType: false,
 
-        success: (response) => {
+            xhrFields: {
+                responseType: 'blob'
+            },
 
-            // Esconde a seção de upload e mostra a seção de imagem gerada
-            const urlImage = URL.createObjectURL(response);
+            success: (response) => {
 
-            // Define a variável global para a URL da imagem gerada
-            generatedImageURL = urlImage;
+                // Esconde a seção de upload e mostra a seção de imagem gerada
+                const urlImage = URL.createObjectURL(response);
 
-            // Esconde a seção de upload e mostra a seção de imagem gerada
-            const img = new Image();
+                // Define a variável global para a URL da imagem gerada
+                generatedImageURL = urlImage;
 
-            // Quando a imagem for carregada, calcula as proporções e ajusta o estilo da div de imagem gerada
-            img.onload = () => {
-                // Calcula as proporções da imagem
-                const width = img.naturalWidth;
-                const height = img.naturalHeight;
+                // Esconde a seção de upload e mostra a seção de imagem gerada
+                const img = new Image();
 
-                const proportion = height / width;
+                // Quando a imagem for carregada, calcula as proporções e ajusta o estilo da div de imagem gerada
+                img.onload = () => {
+                    // Calcula as proporções da imagem
+                    const width = img.naturalWidth;
+                    const height = img.naturalHeight;
 
-                const divWidth = 500;
+                    const proportion = height / width;
 
-                const divHeight = divWidth * proportion;
+                    const divWidth = 500;
 
-                $('.img-generated').css({
-                    'width': `${divWidth}px`,
-                    'height': `${divHeight}px`,
-                    'background-image': `url(${urlImage})`,
-                    'background-size': 'cover',
-                    'background-position': 'center'
-                });
+                    const divHeight = divWidth * proportion;
 
-                const duration = 3000;
-                const animationEnd = Date.now() + duration;
-
-                const interval = setInterval(() => {
-
-                    if (Date.now() > animationEnd) {
-                        return clearInterval(interval);
-                    }
-
-                    confetti({
-                        particleCount: 8,
-                        spread: 360,
-                        startVelocity: 30,
-                        origin: {
-                            x: Math.random(),
-                            y: Math.random() - 0.2
-                        }
+                    $('.img-generated').css({
+                        'width': `${divWidth}px`,
+                        'height': `${divHeight}px`,
+                        'background-image': `url(${urlImage})`,
+                        'background-size': 'cover',
+                        'background-position': 'center'
                     });
 
-                }, 150);
+                    const duration = 3000;
+                    const animationEnd = Date.now() + duration;
 
-            };
+                    const interval = setInterval(() => {
 
-            // Define a fonte da imagem como a URL do blob retornado pela API
-            img.src = urlImage;
+                        if (Date.now() > animationEnd) {
+                            return clearInterval(interval);
+                        }
 
-            // Esconde a seção de upload e mostra a seção de imagem gerada
-            $('#sec-form').hide();
-            $('#sec-img-generated').css('display', 'flex');
-        },
-        error: (error) => {
-            console.error('Error:', error);
-        }
-    })
+                        confetti({
+                            particleCount: 8,
+                            spread: 360,
+                            startVelocity: 30,
+                            origin: {
+                                x: Math.random(),
+                                y: Math.random() - 0.2
+                            }
+                        });
 
-    // Habilitar o botão de gerar imagem novamente
-    $('.generate-btn').prop('disabled', false);
-    
-    $loadingScreen.hide();
+                    }, 150);
+
+                };
+
+                // Define a fonte da imagem como a URL do blob retornado pela API
+                img.src = urlImage;
+
+                // Esconde a seção de upload e mostra a seção de imagem gerada
+                $('#sec-form').hide();
+                $('#sec-img-generated').css('display', 'flex');
+            },
+            error: async (error) => {
+                // Status text
+                const statusText = error.statusText;
+
+                // Tenta extrair a mensagem de erro do corpo da resposta
+                let message = 'Ocorreu um erro ao gerar a imagem. Tente novamente.';
+
+                // Error 404
+                if (statusText == 'NOT FOUND') {
+                    message = 'Endpoint ou imagem não encontrado.';
+                }
+
+                // Error 429
+                if (statusText == 'TOO MANY REQUESTS') {
+                    message = 'Limite de gerações atingido. Tente novamente em alguns minutos.';
+                }
+
+                // Error 503
+                if (statusText == 'SERVICE UNAVAILABLE') {
+                    message = 'O serviço está com alta demanda no momento. Tente novamente em instantes.';
+                }
+
+                // Exibe a mensagem de erro usando a função showAlert
+                return showAlert(message, 'error');
+
+            }
+        })
+
+    } finally {
+        // Habilitar o botão de gerar imagem novamente
+        $('.generate-btn').prop('disabled', false);
+
+        // Esconde a tela de carregamento
+        hideLoadingScreen();
+    }
 })
+
+// Mensagem de alert
+function showAlert(message, type) {
+    // Seleciona a div de alert
+    const $divAlert = $(`.divAlertMessage`);
+
+    // Cria a mensagem de alert
+    const $message = $(`<div></div>`)
+        .addClass('message')
+        .addClass(type === 'success' ? 'success' : 'error');
+
+    const $p = $(`<p></p>`).text(message);
+
+    const $i = $(`<i></i>`)
+        .addClass('fa-solid')
+        .addClass(type === 'success' ? 'fa-circle-check' : 'fa-circle-xmark');
+
+    // Remove a mensagem de alert após a animação de desaparecimento
+    $message.on('animationend', function () {
+        $(this).remove();
+    });
+
+    // Adiciona a mensagem de alert à div de alert
+    $message.append($i).append($p);
+
+    // Adiciona a mensagem de alert à div de alert
+    $divAlert.append($message);
+}
 
 // ====== BOTÕES DE COMPARTILHAR E BAIXAR ======
 
@@ -342,12 +385,20 @@ $('#regenerate-btn').click(() => {
 // Botão voltar
 
 $('.voltar-btn').click(() => {
-
-    // Limpa o input de arquivo e reseta a interface
-    cleanInput();
-
     // Esconde a seção de imagem gerada e mostra a seção de upload
     $('#sec-img-generated').hide();
     $('#sec-form').css('display', 'flex');
+
+})
+
+// Ao digitar no textarea do prompt, ajusta a altura do textarea com base no comprimento do texto
+$('#prompt').on('input', function () {
+    prompt = $(this).val();
+
+    if (prompt.length > 75) {
+        $(this).css('height', '100px');
+    } else {
+        $(this).css('height', '50px');
+    }
 
 })
