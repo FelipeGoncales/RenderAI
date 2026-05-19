@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- JS -->
+    <script type="module" src="assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/loading.css">
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/ac1aaaa398.js" crossorigin="anonymous"></script>
+
+    <title>Render AI</title>
+</head>
+
+<body>
+
+    <main>
+        <section id="sec-form">
+            <!-- Form -->
+            <form id="form-gen-image">
+
+                <h1 class="title home-title">Gere sua imagem</h1>
+                
+                <!-- Input File -->
+                <input type="file" id="upload-image" accept="image/*" maxlength="1">
+
+                <!-- Preview Upload Image -->
+                <div class="div-preview-upload-image">
+
+                    <i class="fa-solid fa-xmark" id="clean-input"></i>
+
+                    <!-- Preview -->
+                    <div class="preview-upload-image"></div>
+
+                </div>
+
+                <!-- Div Upload Image -->
+                <label for="upload-image" class="label-upload-image">
+
+                    <i class="fa-solid fa-file-image"></i>
+
+                    <p>Selecionar imagem</p>
+                </label>
+
+                <!-- Btn submit -->
+                <button type="submit" class="generate-btn">Gerar imagem</button>
+
+            </form>
+        </section>
+
+        <section id="sec-img-generated">
+            
+            <h1 class="title">Sua imagem está pronta!</h1>
+
+            <!-- Imagem gerada -->
+            <div class="img-generated"></div>
+
+            <div class="div-button-actions">
+                <!-- Botão para compartilhar -->
+                <button id="share-btn">
+                    <i class="fa-solid fa-share"></i>
+
+                    <p class="label">Compartilhar</p>
+                </button>
+
+                <!-- Botão para baixar -->
+                <button id="download-btn">
+                    <i class="fa-solid fa-download"></i>
+
+                    <p class="label">Baixar</p>
+                </button>
+
+                <!-- Botão para gerar novamente -->
+                <button id="regenerate-btn">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+
+                    <p class="label">Refazer</p>
+                </button>
+            </div>
+
+            <div class="voltar-btn">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                <p>Voltar</p>
+            </div>
+
+        </section>
+
+        <!-- Loading screen vem aqui (Carregado dinamicamente com js) -->
+    </main>
+
+</body>
+
+</html>
