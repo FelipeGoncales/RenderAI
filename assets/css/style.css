@@ -19,11 +19,34 @@ body {
     color: var(--primary-color);
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 100px;
     justify-content: center;
     align-items: center;
     height: 100vh;
     position: relative;
+}
+
+.divImageFullScreen {
+    display: none;
+    position: fixed;
+    z-index: 20;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    align-items: center;
+    justify-content: center;
+}
+
+.imageFullScreen {
+    width: 100%;
+    max-width: 90vw;
+    max-height: 90vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 20px;
 }
 
 header {
@@ -31,6 +54,8 @@ header {
     align-items: center;
     justify-content: center;
     gap: 15px;
+    position: absolute;
+    top: 10%;
 }
 
 .div-logo {
@@ -76,7 +101,7 @@ form {
         background-color: var(--secondary-color);
         color: var(--primary-color);
         outline: none;
-        font-size: 0.88rem;
+        font-size: 0.95rem;
         resize: none;
         height: 50px;
         transition: 0.2s;
@@ -316,7 +341,7 @@ main {
     bottom: 5%;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 100;
+    z-index: 10;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -452,5 +477,9 @@ main {
         & p {
             font-size: 1.3rem;
         }
+    }
+
+    header {
+        top: 7%;
     }
 }

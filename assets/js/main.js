@@ -39,6 +39,63 @@ $inputFile.change((e) => {
 
 })
 
+// Mostrar imagem em tela cheia
+
+let $divImageFullScreen = $('.divImageFullScreen');
+
+let $imageFullScreen = $('.imageFullScreen');
+
+// Ao clicar na div de preview da imagem, mostra a imagem em tela cheia
+$divPreviewUploadImage.click((e) => {
+    // Retorna caso seja o botão de limpar input que foi clicado
+    if ($(e.target).is('#clean-input')) {
+        return;
+    }
+
+    // Obtém a imagem de background da div de preview
+    const bgImage = $previewUploadImage.css('background-image');
+    showImageFullScreen(bgImage);
+});
+
+// Ao clicar na imagem gerada, mostra a imagem em tela cheia
+$('.img-generated').click(() => {
+    const bgImage = $('.img-generated').css('background-image');
+
+    // Mostra a imagem em tela cheia
+    showImageFullScreen(bgImage);
+});
+
+// Função para mostrar a imagem em tela cheia
+function showImageFullScreen(bgImage) {
+    $('body').css('overflow', 'hidden'); // Esconde a barra de rolagem
+
+    console.log(bgImage);
+    const url = bgImage.slice(5, -2); // remove "url(" e ")"
+
+    // Carrega a imagem pra pegar as dimensões reais
+    const img = new Image();
+    img.src = url;
+    img.onload = function () {
+        const aspectRatio = img.naturalHeight / img.naturalWidth;
+        const width = window.innerWidth * 0.9;  // 90vw em px
+        const height = width * aspectRatio;
+
+        $imageFullScreen.css({
+            'width': '90vw',
+            'height': height + 'px',
+            'background-image': bgImage
+        });
+
+        $divImageFullScreen.css('display', 'flex');
+    };
+}
+
+// Ao clicar na div de imagem em tela cheia, esconde a imagem e mostra a barra de rolagem
+$divImageFullScreen.click(() => {
+    $('body').css('overflow', 'auto'); // Mostra a barra de rolagem
+    $divImageFullScreen.hide();
+});
+
 // Função para limpar o input de arquivo e resetar a interface
 function cleanInput() {
     // Limpa o input de arquivo
@@ -50,7 +107,9 @@ function cleanInput() {
 }
 
 // Ao clicar no botão de limpar input
-$('#clean-input').click(() => {
+$('#clean-input').click((e) => {
+    e.preventDefault();
+
     // Limpa o input de arquivo e reseta a interface
     cleanInput();
 })
@@ -131,24 +190,29 @@ let prompt = $('#prompt').val();
 // Variável global para armazenar a URL da imagem gerada
 var generatedImageURL = null;
 
-// Função para mostrar a tela de carregamento
+// Função para mostrar a tela de carregamento com animação
 function showLoadingScreen() {
     $('.loading')
+        .stop(true)
         .css({
             'display': 'flex',
             'animation': 'showLoading 0.3s forwards'
         });
+    
+    // Esconde a barra de rolagem
+    $('body').css('overflow', 'hidden'); // Esconde a barra de rolagem
 }
 
-// Função para esconder a tela de carregamento
+// Função para esconder a tela de carregamento com animação
 function hideLoadingScreen() {
     $('.loading')
-        .css('animation', 'hideLoading 0.3s forwards');
-
-    // Após a animação de esconder, esconde a tela de carregamento
-    $('.loading').on('animationend', function () {
-        $(this).hide();
-    })
+        .css('animation', 'hideLoading 0.3s forwards')
+        .one('animationend', function () {  // .one() em vez de .on()
+            $(this).hide();
+        });
+    
+    // Mostra a barra de rolagem
+    $('body').css('overflow', 'auto'); // Mostra a barra de rolagem
 }
 
 // Adicionar um evento de submit ao formulário
@@ -208,22 +272,7 @@ $form.submit(async (e) => {
                 // Quando a imagem for carregada, calcula as proporções e ajusta o estilo da div de imagem gerada
                 img.onload = () => {
                     // Calcula as proporções da imagem
-                    const width = img.naturalWidth;
-                    const height = img.naturalHeight;
-
-                    const proportion = height / width;
-
-                    const divWidth = 500;
-
-                    const divHeight = divWidth * proportion;
-
-                    $('.img-generated').css({
-                        'width': `${divWidth}px`,
-                        'height': `${divHeight}px`,
-                        'background-image': `url(${urlImage})`,
-                        'background-size': 'cover',
-                        'background-position': 'center'
-                    });
+                    $('.img-generated').css('background-image', `url(${urlImage})`);
 
                     const duration = 3000;
                     const animationEnd = Date.now() + duration;
