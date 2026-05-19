@@ -1,3 +1,3 @@
-const urlAPI = 'http://192.168.0.7:5000';
+const urlAPI = 'https://renderai-api.onrender.com';
 
 export default urlAPI;
