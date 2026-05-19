@@ -39,16 +39,20 @@ $inputFile.change((e) => {
 
 })
 
-// Ao clicar no botão de limpar input
-$('#clean-input').click(() => {
-
+// Função para limpar o input de arquivo e resetar a interface
+function cleanInput() {
     // Limpa o input de arquivo
     document.querySelector('#upload-image').value = '';
 
     // Se não houver arquivo, mostra o label de upload e esconde a div de preview
     $labelUploadImage.show();
     $divPreviewUploadImage.hide();
+}
 
+// Ao clicar no botão de limpar input
+$('#clean-input').click(() => {
+    // Limpa o input de arquivo e reseta a interface
+    cleanInput();
 })
 
 const frases = [
@@ -174,7 +178,7 @@ $form.submit(async (e) => {
     const image = $inputFile[0].files[0];
 
     if (!image) {
-        alert('Please select an image to upload.');
+        alert('Por favor, selecione uma imagem.');
         return;
     }
 
@@ -333,4 +337,17 @@ $('#share-btn').click(async () => {
 
 $('#regenerate-btn').click(() => {
     $form.submit();
+})
+
+// Botão voltar
+
+$('.voltar-btn').click(() => {
+
+    // Limpa o input de arquivo e reseta a interface
+    cleanInput();
+
+    // Esconde a seção de imagem gerada e mostra a seção de upload
+    $('#sec-img-generated').hide();
+    $('#sec-form').css('display', 'flex');
+
 })

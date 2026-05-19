@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+@import url(https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap);
 
 * {
     margin: 0;
@@ -22,9 +22,39 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    position: relative;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    position: absolute;
+    top: 10%;
+}
+
+.div-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+
+    & .logo {
+        width: 40px;
+        height: auto;
+    }
+
+    & p {
+        font-family: "Manrope", sans-serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+        font-weight: 500;
+    }
 }
 
 form {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -38,11 +68,11 @@ form {
     width: 280px;
     border-radius: 30px;
     border: 1px solid var(--primary-color);
-    
+
     color: var(--bg-color);
     font-weight: 600;
     text-transform: uppercase;
-    
+
     cursor: pointer;
     transition: 0.3s;
 
@@ -112,12 +142,18 @@ form {
     }
 }
 
+main {
+    width: 100%;
+}
+
 #sec-form {
-    display: none;
+    display: flex;
+    width: 100%;
 }
 
 #sec-img-generated {
-    display: flex;    
+    width: 100%;
+    display: none;
     flex-direction: column;
     gap: 30px;
     align-items: center;
@@ -140,8 +176,15 @@ form {
 }
 
 @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
 }
 
 /* Ações de botão */
@@ -161,12 +204,12 @@ form {
         cursor: pointer;
         position: relative;
         transition: 0.2s;
-        
+
         & i {
             font-size: 1.1rem;
             color: var(--primary-color);
         }
-        
+
         & .label {
             display: none;
             transition: 0.2s;
@@ -185,6 +228,7 @@ form {
 
         &:hover {
             background-color: rgba(255, 255, 255, 0.2);
+
             & .label {
                 display: block;
             }
@@ -215,13 +259,16 @@ form {
     }
 
     &:hover {
-        & i, & p {
+
+        & i,
+        & p {
             color: rgba(255, 255, 255, 0.75);
         }
     }
 }
 
-.preview-upload-image, .img-generated {
+.preview-upload-image,
+.img-generated {
     width: 280px;
     background-color: #222222;
     height: 280px;
@@ -247,5 +294,55 @@ form {
 
     & p {
         font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 500px) {
+
+    .label-upload-image,
+    .preview-upload-image,
+    .img-generated {
+        padding: 50px;
+        width: 90vw !important;
+        height: 90vw !important;
+    }
+
+    .generate-btn {
+        width: 90vw;
+        padding: 18px;
+    }
+
+    .title {
+        font-size: 1.3rem;
+    }
+
+    .div-button-actions {
+
+        gap: 15px;
+
+        & button {
+            width: 65px;
+            height: 65px;
+
+            & i {
+                font-size: 1.3rem;
+            }
+        }
+    }
+
+    .voltar-btn {
+        padding: 20px;
+
+        & i {
+            font-size: 1.5rem;
+        }
+
+        & p {
+            font-size: 1.3rem;
+        }
+    }
+
+    header {
+        top: 7%;
     }
 }
