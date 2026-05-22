@@ -37,7 +37,7 @@
             <form id="form-gen-image">
 
                 <h1 class="title home-title">Gere sua imagem</h1>
-                
+
                 <!-- Input File -->
                 <input type="file" id="upload-image" accept="image/*" maxlength="1">
 
@@ -61,18 +61,17 @@
 
                 <div class="div-prompt">
                     <textarea name="prompt" id="prompt" placeholder="Descreva o ambiente que deseja criar"></textarea>
-                  
+
                     <!-- Btn submit -->
                     <button type="submit" class="generate-btn">
                         <i class="fa-solid fa-paper-plane"></i>
                     </button>
-                </div>
-
+                </div>            
             </form>
         </section>
 
         <section id="sec-img-generated">
-            
+
             <h1 class="title">Sua imagem está pronta!</h1>
 
             <!-- Imagem gerada -->
@@ -112,6 +111,14 @@
 
         <div class="divImageFullScreen">
             <div class="imageFullScreen"></div>
+
+            <div class="divImageAfter">
+                <div class="image-after"></div>
+                
+                <div class="bar"></div>
+            </div>
+
+            <input type="range" min="0" max="100" value="100" class="slider">
         </div>
 
         <div class="divAlertMessage"></div>

@@ -54,22 +54,34 @@ $divPreviewUploadImage.click((e) => {
 
     // Obtém a imagem de background da div de preview
     const bgImage = $previewUploadImage.css('background-image');
-    showImageFullScreen(bgImage);
+
+    // Garante que esconde a div de imagem em tela cheia e mostra a barra de rolagem caso esteja aberta por alguma razão
+    $('.divImageAfter').hide();
+
+    showImageFullScreen(bgImage, $imageFullScreen);
 });
 
 // Ao clicar na imagem gerada, mostra a imagem em tela cheia
 $('.img-generated').click(() => {
-    const bgImage = $('.img-generated').css('background-image');
+    // Obtém a imagem de background da div de preview
+    const bgImagePreview = $previewUploadImage.css('background-image');
+    
+    const bgImageGenerated = $('.img-generated').css('background-image');
+
+    // Garante que esconde a div de imagem em tela cheia e mostra a barra de rolagem caso esteja aberta por alguma razão
+    $('.divImageAfter').css('display', 'flex');
 
     // Mostra a imagem em tela cheia
-    showImageFullScreen(bgImage);
+    showImageFullScreen(bgImagePreview, $imageFullScreen);
+
+    // Mostra a imagem em tela cheia
+    showImageFullScreen(bgImageGenerated, $('.image-after'));
 });
 
 // Função para mostrar a imagem em tela cheia
-function showImageFullScreen(bgImage) {
+function showImageFullScreen(bgImage, div) {
     $('body').css('overflow', 'hidden'); // Esconde a barra de rolagem
 
-    console.log(bgImage);
     const url = bgImage.slice(5, -2); // remove "url(" e ")"
 
     // Carrega a imagem pra pegar as dimensões reais
@@ -77,13 +89,15 @@ function showImageFullScreen(bgImage) {
     img.src = url;
     img.onload = function () {
         const aspectRatio = img.naturalHeight / img.naturalWidth;
-        const width = window.innerWidth * 0.9;  // 90vw em px
+        const width = div === $imageFullScreen ? window.innerWidth * 0.9 : window.innerWidth * 0.915;  // 90vw em px
         const height = width * aspectRatio;
 
-        $imageFullScreen.css({
-            'width': '90vw',
+        $('.slider').css('padding', `${height/2}px 0`)
+
+        div.css({
             'height': height + 'px',
-            'background-image': bgImage
+            'background-image': bgImage,
+            'display': 'flex'
         });
 
         $divImageFullScreen.css('display', 'flex');
@@ -91,9 +105,12 @@ function showImageFullScreen(bgImage) {
 }
 
 // Ao clicar na div de imagem em tela cheia, esconde a imagem e mostra a barra de rolagem
-$divImageFullScreen.click(() => {
-    $('body').css('overflow', 'auto'); // Mostra a barra de rolagem
-    $divImageFullScreen.hide();
+$divImageFullScreen.click((e) => {
+    if (e.target != document.querySelector('.slider')) {
+        $('body').css('overflow', 'auto'); // Mostra a barra de rolagem
+        $divImageFullScreen.hide();
+    }
+    
 });
 
 // Função para limpar o input de arquivo e resetar a interface
@@ -451,3 +468,12 @@ $('#prompt').on('input', function () {
     }
 
 })
+
+
+// Função para fazer o slide da imagem gerada (before/after)
+const slider = document.querySelector(".slider");
+const wrapper = document.querySelector(".image-after");
+
+slider.addEventListener("input", () => {
+    wrapper.style.width = slider.value + "%";
+});
